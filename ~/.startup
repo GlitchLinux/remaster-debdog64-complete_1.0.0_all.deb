@@ -1,0 +1,28 @@
+#!/bin/bash
+# JWM Startup Script
+
+# Log startup
+echo "$(date) - JWM startup beginning" >> /tmp/jwm_startup.log
+
+# Wait for X server to be fully ready
+sleep 3
+
+# Kill PCManFM desktop mode if running
+killall pcmanfm 2>/dev/null
+echo "$(date) - Killed PCManFM" >> /tmp/jwm_startup.log
+
+# Clean up any stale wallpaper slideshow processes and lock files
+pkill -f "wallpaper-slideshow start" 2>/dev/null
+rm -f /tmp/wallpaper_slideshow.lock 2>/dev/null
+echo "$(date) - Cleaned up old slideshow processes" >> /tmp/jwm_startup.log
+
+# Wait for cleanup
+sleep 2
+
+# Set initial wallpaper directly with feh
+feh --bg-fill /home/x/Wallpapers/BONSAI-WALLPAPERS/bonsai1-FUZZ.png
+echo "$(date) - Set initial wallpaper" >> /tmp/jwm_startup.log
+
+# Start fresh wallpaper slideshow daemon
+/usr/local/bin/wallpaper-slideshow start &
+echo "$(date) - Started slideshow daemon" >> /tmp/jwm_startup.log
